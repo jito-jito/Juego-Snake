@@ -1,7 +1,4 @@
-import sum from './utils/sum'
+import './assets/styles/styles.css'
 
-const hello = 'hello'
 
-console.log(hello)
-
-console.log(sum(1,2))
+console.log('hola mundoo felii!!!')
