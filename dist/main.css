@@ -1,4 +1,4 @@
-body {
+/* body {
     background-color: rgb(236, 255, 127);
     margin: 0;
 }
@@ -12,8 +12,11 @@ div {
 #player {
     position: relative;
     background-color: aquamarine;
-    top: 85px;
-    width: 50px;
-    height: 100px;
+    width: 10px;
+    height: 10px;
     border: 1px solid black;
+} */
+
+canvas {
+    border: 1px solid red;
 }

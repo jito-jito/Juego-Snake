@@ -1,1 +1,1 @@
-(()=>{"use strict";var t=document.getElementById("player").getBoundingClientRect();console.log(t),console.log(t.top,t.right,t.bottom,t.left)})();
+(()=>{"use strict";var t,e,i,o=document.getElementById("canvas"),h=o.getContext("2d");e=(t={mov:{enmovimiento:!1,lastMov:""},tamaño:{width:10,heigth:10},cuerpos:[{xi:o.width/2,yi:o.height/2}]}).tamaño,i=t.cuerpos,console.log(e.width,i[0].xi),h.fillRect(i[0].xi,i[0].yi,e.width,e.height)})();
