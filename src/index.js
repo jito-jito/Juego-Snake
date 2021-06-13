@@ -8,7 +8,7 @@ let p1 = {
     mov: {
         enmovimiento: false,
         lastMov: "ArrowRight",
-        contrMov: "",
+        contrMov: undefined,
         movimiento: 10,
     },
     tamaño: {
@@ -17,87 +17,94 @@ let p1 = {
     },
     cuerpos: [
         {
-            xi: canvas.width / 2,
-            yi: canvas.height / 2,
+            xi: 100,
+            yi: 50,
         },
         {
-            xi : (canvas.width / 2) - ( 10 ),
-            yi: canvas.height / 2,
+            xi : (100) - ( 10 ),
+            yi: 50,
         },
         {
-            xi : (canvas.width / 2) - ( 10 * 2 ),
-            yi: canvas.height / 2,
+            xi : (100) - ( 10 * 2 ),
+            yi: 50,
         },
         {
-            xi : (canvas.width / 2) - ( 10 * 3 ),
-            yi: canvas.height / 2,
-        },
-        {
-            xi : (canvas.width / 2) - ( 10 * 4 ),
-            yi: canvas.height / 2,
-        },
-        {
-            xi : (canvas.width / 2) - ( 10 * 5 ),
-            yi: canvas.height / 2,
-        },
-        {
-            xi : (canvas.width / 2) - ( 10 * 6 ),
-            yi: canvas.height / 2,
-        },
-        {
-            xi : (canvas.width / 2) - ( 10 * 7 ),
-            yi: canvas.height / 2,
+            xi : (100) - ( 10 * 3 ),
+            yi: 50,
         }
+        // {
+        //     xi : (100) - ( 10 * 4 ),
+        //     yi: 50,
+        // },
+        // {
+        //     xi : (100) - ( 10 * 5 ),
+        //     yi: 50,
+        // },
+        // {
+        //     xi : (100) - ( 10 * 6 ),
+        //     yi: 50,
+        // },
+        // {
+        //     xi : (100) - ( 10 * 7 ),
+        //     yi: 50,
+        // }
     ]
 }
-let move
+let level = {
+    coordenadas: {
+        xAzar: null,
+        yAzar: null
+    },
+    level: 1,
+    // interval: undefined,
+    cuerpo: true
+}
 
+function cuerposAlAzar(lev, p1) {
+    lev.coordenadas.xAzar = numeroAzar(1 , 38);
+    lev.coordenadas.yAzar = numeroAzar(1 , 35);
+    lienzo.fillRect(lev.coordenadas.xAzar, lev.coordenadas.yAzar, p1.tamaño.width, p1.tamaño.heigth)
+    lev.cuerpo = true
+    
+}
 
-function dibujaInicio ({tamaño , cuerpos}) {
+function dibujaInicio ({tamaño , cuerpos}, level) {
     for(let i=0; i <  cuerpos.length; i++) {
         lienzo.fillRect(cuerpos[i].xi, cuerpos[i].yi, tamaño.width, tamaño.heigth)
     }
-    document.addEventListener('keyup', mover, false);  
-
+    
+    
+    document.addEventListener('keyup', presionoTecla, false);  
 }
-dibujaInicio(p1)
-
-function mover(event) {
-    cuerposalAzar()
 
 
-    if (move != undefined) {
-        clearInterval(move)
+dibujaInicio(p1,level)
+cuerposAlAzar(level, p1)
+console.log(level.coordenadas)
+
+
+
+function presionoTecla(event) {
+    
+    if (p1.mov.contrMov) {
+        clearInterval(p1.mov.contrMov)
     } else {
-    }
-    let lastMov;
-    switch (p1.mov.lastMov) {
-        case "ArrowUp":
-            lastMov = 1;
-            break;
-        case "ArrowDown":
-            lastMov = 3;
-            break;
-        case "ArrowRight":
-            lastMov = 2;
-            break;
-        case "ArrowLeft":
-            lastMov = 4;
-            break;
-    }
 
+    }
+    
+    let lastMov = convertirKeyANumero(p1.mov.lastMov)
 
     if((lastMov % 2 == 0) && (event.key == "ArrowUp" || event.key == "ArrowDown")) {
         switch (event.key) {
             case "ArrowUp":
                 console.log('arriva')
                 p1.mov.lastMov = "ArrowUp";
-                move = setInterval(moverA, 250, p1, "ArrowUp");
+                p1.mov.contrMov = setInterval(moverA, 70, p1, "ArrowUp");
                 break;
             case "ArrowDown":
                 console.log('abajo')
                 p1.mov.lastMov = "ArrowDown";
-                move = setInterval(moverA, 250, p1, "ArrowDown");
+                p1.mov.contrMov = setInterval(moverA, 70, p1, "ArrowDown");
                 break;
         }  
 
@@ -106,119 +113,163 @@ function mover(event) {
             case "ArrowRight":
                 console.log('derecha')
                 p1.mov.lastMov = "ArrowRight";
-                move = setInterval(moverA, 250, p1, "ArrowRight");
+                p1.mov.contrMov = setInterval(moverA, 70, p1, "ArrowRight");
                 break;
             case "ArrowLeft":
                 console.log('izquierda')
                 p1.mov.lastMov = "ArrowLeft";
-                move = setInterval(moverA, 250, p1, "ArrowLeft");
+                p1.mov.contrMov = setInterval(moverA, 70, p1, "ArrowLeft");
                 break;
         }  
     } else {
-        move = setInterval(moverA, 250, p1, p1.mov.lastMov);
+        p1.mov.contrMov = setInterval(moverA, 70, p1, p1.mov.lastMov);
         console.log('no te puedes mover por allí...')
     } 
-    
-
 }
+
+function convertirKeyANumero(key) {
+    switch (key) {
+        case "ArrowUp":
+            return 1;
+        case "ArrowDown":
+            return 3;
+        case "ArrowRight":
+            return 2;
+        case "ArrowLeft":
+            return 4;
+    }
+}
+
+// function validarNumeroKey(numerokey) {
+
+// }
+
+
+
+
+
 
 function moverA(p1, direccion) {   
     
-    if(!p1.live) {
-        document.write('memoriii')
-    }else {
-        
-            switch (direccion) {
-                case "ArrowUp":
-                    // borra todo
-                    for(let i=0; i <  p1.cuerpos.length; i++) {
-                        lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
-                    }
-                    // agrega la nueva coordenada
-                    p1.cuerpos.unshift({
-                        xi: p1.cuerpos[0].xi,
-                        yi: p1.cuerpos[0].yi - 10,
-                    })
-                    // elimina la ultima coordenada
-                    p1.cuerpos.pop()
-                    //dibuja todo nuevamente
-                    for(let i=0; i <  p1.cuerpos.length; i++) {
-                        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
-                    }
-                    
-                    console.log(p1.cuerpos)
-                    break;
-                case "ArrowDown":
-                    for(let i=0; i <  p1.cuerpos.length; i++) {
-                        lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
-                    }
-                    p1.cuerpos.unshift({
-                        xi: p1.cuerpos[0].xi,
-                        yi: p1.cuerpos[0].yi + 10,
-                    })
-                    p1.cuerpos.pop()
-                    for(let i=0; i <  p1.cuerpos.length; i++) {
-                        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
-                    }
-                    
-                    console.log(p1.cuerpos)
-                    break;    
-                case "ArrowRight":
-                    for(let i=0; i <  p1.cuerpos.length; i++) {
-                        lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
-                    }
-                    p1.cuerpos.unshift({
-                        xi: p1.cuerpos[0].xi +10,
-                        yi: p1.cuerpos[0].yi,
-                    })
-                    p1.cuerpos.pop()
-                    for(let i=0; i <  p1.cuerpos.length; i++) {
-                        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
-                    }
-                    
-                    console.log(p1.cuerpos)
-                    break;
-                case "ArrowLeft":
-                    for(let i=0; i <  p1.cuerpos.length; i++) {
-                        lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
-                    }
-                    p1.cuerpos.unshift({
-                        xi: p1.cuerpos[0].xi -10,
-                        yi: p1.cuerpos[0].yi,
-                    })
-                    p1.cuerpos.pop()
-                    for(let i=0; i <  p1.cuerpos.length; i++) {
-                        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
-                    }
-                    
-                    console.log(p1.cuerpos)
-                    break;
-            }             
-            let choque = p1.cuerpos.filter( function (cuerpo) {
-                if ((cuerpo.xi === p1.cuerpos[0].xi) && (cuerpo.yi === p1.cuerpos[0].yi)) {
-                    return cuerpo 
-                }
-             })
-            // console.log(choque)
-            if (choque.length > 1) {
-                p1.live = false;
-            } else {
-                choque = [];
+    switch (direccion) {
+        case "ArrowUp":
+            // borra todo
+            for(let i=0; i <  p1.cuerpos.length; i++) {
+                lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
             }
-            if((p1.cuerpos[0].xi == 0 && p1.cuerpos[0].yi >= 0) || (p1.cuerpos[0].xi >= 0 && p1.cuerpos[0].yi == 0)) {
-                p1.live = false;
-            } else if ((p1.cuerpos[0].xi == canvas.width && p1.cuerpos[0].yi >= 0) || (p1.cuerpos[0].xi >=0 && p1.cuerpos[0].yi == canvas.height) ) {
-                p1.live = false;
+            // agrega la nueva coordenada
+            p1.cuerpos.unshift({
+                xi: p1.cuerpos[0].xi,
+                yi: p1.cuerpos[0].yi - 10,
+            })
+            // elimina la ultima coordenada
+            p1.cuerpos.pop()
+            //dibuja todo nuevamente
+            for(let i=0; i <  p1.cuerpos.length; i++) {
+                lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
             }
-
-    }
-
-    
+            
+            console.log(p1.cuerpos)
+            break;
+        case "ArrowDown":
+            for(let i=0; i <  p1.cuerpos.length; i++) {
+                lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+            }
+            p1.cuerpos.unshift({
+                xi: p1.cuerpos[0].xi,
+                yi: p1.cuerpos[0].yi + 10,
+            })
+            p1.cuerpos.pop()
+            for(let i=0; i <  p1.cuerpos.length; i++) {
+                lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+            }
+            
+            console.log(p1.cuerpos)
+            break;    
+        case "ArrowRight":
+            for(let i=0; i <  p1.cuerpos.length; i++) {
+                lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+            }
+            p1.cuerpos.unshift({
+                xi: p1.cuerpos[0].xi +10,
+                yi: p1.cuerpos[0].yi,
+            })
+            p1.cuerpos.pop()
+            for(let i=0; i <  p1.cuerpos.length; i++) {
+                lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+            }
+            
+            console.log(p1.cuerpos)
+            break;
+        case "ArrowLeft":
+            for(let i=0; i <  p1.cuerpos.length; i++) {
+                lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+            }
+            p1.cuerpos.unshift({
+                xi: p1.cuerpos[0].xi -10,
+                yi: p1.cuerpos[0].yi,
+            })
+            p1.cuerpos.pop()
+            for(let i=0; i <  p1.cuerpos.length; i++) {
+                lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+            }
+            
+            console.log(p1.cuerpos)
+            break;
+    }    
+    pruebaDeColiciones(p1, level)         
 }
 
-function cuerposalAzar() {
-    // setInterval()
+function pruebaDeColiciones(p1, level) {
+    let ColisionPropia = p1.cuerpos.filter( function (cuerpo) {
+        if ((cuerpo.xi === p1.cuerpos[0].xi) && (cuerpo.yi === p1.cuerpos[0].yi)) {
+            return cuerpo 
+        }
+     })
+
+    if (ColisionPropia.length > 1) {
+        p1.live = false;
+    } 
+   
+    // colision en los bordes del canvas 
+    if((p1.cuerpos[0].xi == 0 && p1.cuerpos[0].yi >= 0) || (p1.cuerpos[0].xi >= 0 && p1.cuerpos[0].yi == 0)) {
+        p1.live = false;
+    } else if ((p1.cuerpos[0].xi == canvas.width && p1.cuerpos[0].yi >= 0) || (p1.cuerpos[0].xi >=0 && p1.cuerpos[0].yi == canvas.height) ) {
+        p1.live = false;
+    }
+    
+    // colicion con un cuerpo level
+    // debugger
+    if ((level.coordenadas.xAzar == p1.cuerpos[0].xi) && (level.coordenadas.yAzar === p1.cuerpos[0].yi)) {
+        level.level +=1;
+        level.cuerpo = false
+        p1.cuerpos.push(
+            {
+                xi: (p1.cuerpos[0].xi) * (p1.cuerpos.length+1),
+                yi: (p1.cuerpos[0].yi) * (p1.cuerpos.length+1)
+            }
+        )
+        // lienzo.clearRect(level.coordenadas.xAzar, level.coordenadas.yAzar, p1.tamaño.width, p1.tamaño.heigth)
+        cuerposAlAzar(level, p1) 
+    } 
+   
+
+    if(!p1.live) {
+        document.write('memoriiiii')
+    }
+}
 
 
 
+
+
+
+
+
+
+
+
+function numeroAzar(min,max) {
+    return 10 * (Math.floor(Math.random() * (max - min) + min));
+    
 }
