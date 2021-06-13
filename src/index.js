@@ -4,9 +4,10 @@ let canvas = document.getElementById('canvas')
 let lienzo = canvas.getContext('2d')
 
 let p1 = {
+    live: true,
     mov: {
         enmovimiento: false,
-        lastMov: "",
+        lastMov: "ArrowRight",
         contrMov: "",
         movimiento: 10,
     },
@@ -19,113 +20,205 @@ let p1 = {
             xi: canvas.width / 2,
             yi: canvas.height / 2,
         },
-        // {
-        //     xi : (canvas.width / 2) -( p1.tamaño.width ),
-        //     yi: canvas.height / 2,
-        // },
-        // {
-        //     xi : (canvas.width / 2) -( p1.tamaño.width * 2 ),
-        //     yi: canvas.height / 2,
-        // }
+        {
+            xi : (canvas.width / 2) - ( 10 ),
+            yi: canvas.height / 2,
+        },
+        {
+            xi : (canvas.width / 2) - ( 10 * 2 ),
+            yi: canvas.height / 2,
+        },
+        {
+            xi : (canvas.width / 2) - ( 10 * 3 ),
+            yi: canvas.height / 2,
+        },
+        {
+            xi : (canvas.width / 2) - ( 10 * 4 ),
+            yi: canvas.height / 2,
+        },
+        {
+            xi : (canvas.width / 2) - ( 10 * 5 ),
+            yi: canvas.height / 2,
+        },
+        {
+            xi : (canvas.width / 2) - ( 10 * 6 ),
+            yi: canvas.height / 2,
+        },
+        {
+            xi : (canvas.width / 2) - ( 10 * 7 ),
+            yi: canvas.height / 2,
+        }
     ]
-
 }
-
 let move
 
-console.log(canvas)
 
 function dibujaInicio ({tamaño , cuerpos}) {
-    
-    //console.log(cuerpos[0].xi, cuerpos[0].yi, tamaño.width, tamaño.heigth)
-    lienzo.fillRect(cuerpos[0].xi, cuerpos[0].yi, tamaño.width, tamaño.heigth)
-    document.addEventListener('keyup', direccion, false);  
+    for(let i=0; i <  cuerpos.length; i++) {
+        lienzo.fillRect(cuerpos[i].xi, cuerpos[i].yi, tamaño.width, tamaño.heigth)
+    }
+    document.addEventListener('keyup', mover, false);  
 
 }
 dibujaInicio(p1)
 
-function direccion(event) {
-    let { cuerpos, tamaño, mov } = p1
-    lienzo.clearRect(cuerpos[0].xi, cuerpos[0].yi, tamaño.width, tamaño.heigth);
+function mover(event) {
+    cuerposalAzar()
 
-    if(!(mov.enMovimiento)) {
-        
-        if(event.key === "ArrowUp") {
-            move = setInterval(moverRecto, 70, "ArrowUp", p1);
-        }  
-        else if (event.key === "ArrowDown") {
-            move = setInterval(moverRecto, 70, "ArrowDown", p1);
-        }
-        else if (event.key === "ArrowRight") {
-            move = setInterval(moverRecto, 70, "ArrowRight", p1);
-        }
-        else if (event.key === "ArrowLeft") {
-            move = setInterval(moverRecto, 70, "ArrowLeft", p1);
-        }
+
+    if (move != undefined) {
+        clearInterval(move)
     } else {
-        if(!(event.key === mov.lastMov)) {
-            console.log('no')
+    }
+    let lastMov;
+    switch (p1.mov.lastMov) {
+        case "ArrowUp":
+            lastMov = 1;
+            break;
+        case "ArrowDown":
+            lastMov = 3;
+            break;
+        case "ArrowRight":
+            lastMov = 2;
+            break;
+        case "ArrowLeft":
+            lastMov = 4;
+            break;
+    }
+
+
+    if((lastMov % 2 == 0) && (event.key == "ArrowUp" || event.key == "ArrowDown")) {
+        switch (event.key) {
+            case "ArrowUp":
+                console.log('arriva')
+                p1.mov.lastMov = "ArrowUp";
+                move = setInterval(moverA, 250, p1, "ArrowUp");
+                break;
+            case "ArrowDown":
+                console.log('abajo')
+                p1.mov.lastMov = "ArrowDown";
+                move = setInterval(moverA, 250, p1, "ArrowDown");
+                break;
         }  
-        else if (!(event.key === mov.contrMov)) {
-            console.log('no')
-            
-        }
-        else if (event.key === "ArrowRight") {
-            console.log('si')
-        }
-        else if (event.key === "ArrowLeft") {
-            console.log('si')
-    }
-    // } else {
+
+    } else if ((lastMov % 2 == 1) && (event.key == "ArrowRight" ||  event.key =="ArrowLeft")) {
+        switch (event.key) {
+            case "ArrowRight":
+                console.log('derecha')
+                p1.mov.lastMov = "ArrowRight";
+                move = setInterval(moverA, 250, p1, "ArrowRight");
+                break;
+            case "ArrowLeft":
+                console.log('izquierda')
+                p1.mov.lastMov = "ArrowLeft";
+                move = setInterval(moverA, 250, p1, "ArrowLeft");
+                break;
+        }  
+    } else {
+        move = setInterval(moverA, 250, p1, p1.mov.lastMov);
+        console.log('no te puedes mover por allí...')
+    } 
     
+
+}
+
+function moverA(p1, direccion) {   
     
+    if(!p1.live) {
+        document.write('memoriii')
+    }else {
         
+            switch (direccion) {
+                case "ArrowUp":
+                    // borra todo
+                    for(let i=0; i <  p1.cuerpos.length; i++) {
+                        lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+                    }
+                    // agrega la nueva coordenada
+                    p1.cuerpos.unshift({
+                        xi: p1.cuerpos[0].xi,
+                        yi: p1.cuerpos[0].yi - 10,
+                    })
+                    // elimina la ultima coordenada
+                    p1.cuerpos.pop()
+                    //dibuja todo nuevamente
+                    for(let i=0; i <  p1.cuerpos.length; i++) {
+                        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+                    }
+                    
+                    console.log(p1.cuerpos)
+                    break;
+                case "ArrowDown":
+                    for(let i=0; i <  p1.cuerpos.length; i++) {
+                        lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+                    }
+                    p1.cuerpos.unshift({
+                        xi: p1.cuerpos[0].xi,
+                        yi: p1.cuerpos[0].yi + 10,
+                    })
+                    p1.cuerpos.pop()
+                    for(let i=0; i <  p1.cuerpos.length; i++) {
+                        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+                    }
+                    
+                    console.log(p1.cuerpos)
+                    break;    
+                case "ArrowRight":
+                    for(let i=0; i <  p1.cuerpos.length; i++) {
+                        lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+                    }
+                    p1.cuerpos.unshift({
+                        xi: p1.cuerpos[0].xi +10,
+                        yi: p1.cuerpos[0].yi,
+                    })
+                    p1.cuerpos.pop()
+                    for(let i=0; i <  p1.cuerpos.length; i++) {
+                        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+                    }
+                    
+                    console.log(p1.cuerpos)
+                    break;
+                case "ArrowLeft":
+                    for(let i=0; i <  p1.cuerpos.length; i++) {
+                        lienzo.clearRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+                    }
+                    p1.cuerpos.unshift({
+                        xi: p1.cuerpos[0].xi -10,
+                        yi: p1.cuerpos[0].yi,
+                    })
+                    p1.cuerpos.pop()
+                    for(let i=0; i <  p1.cuerpos.length; i++) {
+                        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+                    }
+                    
+                    console.log(p1.cuerpos)
+                    break;
+            }             
+            let choque = p1.cuerpos.filter( function (cuerpo) {
+                if ((cuerpo.xi === p1.cuerpos[0].xi) && (cuerpo.yi === p1.cuerpos[0].yi)) {
+                    return cuerpo 
+                }
+             })
+            // console.log(choque)
+            if (choque.length > 1) {
+                p1.live = false;
+            } else {
+                choque = [];
+            }
+            if((p1.cuerpos[0].xi == 0 && p1.cuerpos[0].yi >= 0) || (p1.cuerpos[0].xi >= 0 && p1.cuerpos[0].yi == 0)) {
+                p1.live = false;
+            } else if ((p1.cuerpos[0].xi == canvas.width && p1.cuerpos[0].yi >= 0) || (p1.cuerpos[0].xi >=0 && p1.cuerpos[0].yi == canvas.height) ) {
+                p1.live = false;
+            }
+
+    }
+
     
-       
-    //}
 }
 
-    
+function cuerposalAzar() {
+    // setInterval()
 
 
-
-function moverRecto (direccion, { mov, tamaño, cuerpos }) {
-
-    if (direccion === 'ArrowUp') {
-        lienzo.clearRect(cuerpos[0].xi, cuerpos[0].yi, tamaño.width, tamaño.heigth);
-        lienzo.fillRect(cuerpos[0].xi, cuerpos[0].yi - mov.movimiento, tamaño.width ,tamaño.heigth);
-        cuerpos[0].yi = (cuerpos[0].yi - mov.movimiento);
-        mov.enMovimiento = true
-        mov.lastMov = 'ArrowUp'
-        mov.contrMov = 'ArrowDown'
-    }
-    else if (direccion === 'ArrowDown') {
-        lienzo.clearRect(cuerpos[0].xi, cuerpos[0].yi, tamaño.width, tamaño.heigth);
-        lienzo.fillRect(cuerpos[0].xi, cuerpos[0].yi + mov.movimiento, tamaño.width ,tamaño.heigth);
-        cuerpos[0].yi = (cuerpos[0].yi + mov.movimiento);
-        mov.enMovimiento = true
-        mov.lastMov = 'ArrowDown'
-        mov.contrMov = 'ArrowUp'
-    }
-    else if (direccion === 'ArrowLeft') {
-        lienzo.clearRect(cuerpos[0].xi, cuerpos[0].yi, tamaño.width, tamaño.heigth);
-        lienzo.fillRect(cuerpos[0].xi - mov.movimiento, cuerpos[0].yi , tamaño.width ,tamaño.heigth);
-        cuerpos[0].xi = (cuerpos[0].xi - mov.movimiento);
-        mov.enMovimiento = true
-        mov.lastMov = 'ArrowLeft'
-        mov.contrMov = 'ArrowRight'
-    }
-    else if (direccion === 'ArrowRight') {
-        lienzo.clearRect(cuerpos[0].xi, cuerpos[0].yi, tamaño.width, tamaño.heigth);
-        lienzo.fillRect(cuerpos[0].xi + mov.movimiento, cuerpos[0].yi , tamaño.width ,tamaño.heigth);
-        cuerpos[0].xi = (cuerpos[0].xi + mov.movimiento);
-        mov.enMovimiento = true
-        mov.lastMov = 'ArrowRight'
-        mov.contrMov = 'ArrowLeft'
-    }
-}
-
-
-function moverCurva () {
 
 }
