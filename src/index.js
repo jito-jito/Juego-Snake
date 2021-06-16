@@ -2,6 +2,10 @@ import './assets/styles/styles.css'
 
 let canvas = document.getElementById('canvas')
 let lienzo = canvas.getContext('2d')
+let levelContainer = document.getElementById('level')
+let modalContainer = document.getElementById('modalContainer')
+let modalButton = document.getElementById('modalButton')
+
 
 let p1 = {
     live: true,
@@ -56,8 +60,22 @@ let level = {
         yAzar: null
     },
     level: 1,
+    dificultad: 70,
     // interval: undefined,
     cuerpo: true
+}
+
+
+
+function dibujaInicio () {   
+    modalContainer.classList.remove("open")
+    for(let i=0; i <  p1.cuerpos.length; i++) {
+        lienzo.fillRect(p1.cuerpos[i].xi, p1.cuerpos[i].yi, p1.tamaño.width, p1.tamaño.heigth)
+    }
+    actualizarEstado(level)
+
+    cuerposAlAzar(level, p1)
+    document.addEventListener('keyup', presionoTecla, false);  
 }
 
 function cuerposAlAzar(lev, p1) {
@@ -67,31 +85,16 @@ function cuerposAlAzar(lev, p1) {
     lev.cuerpo = true
     
 }
-
-function dibujaInicio ({tamaño , cuerpos}, level) {
-    for(let i=0; i <  cuerpos.length; i++) {
-        lienzo.fillRect(cuerpos[i].xi, cuerpos[i].yi, tamaño.width, tamaño.heigth)
-    }
-    
-    
-    document.addEventListener('keyup', presionoTecla, false);  
+function numeroAzar(min,max) {
+    return 10 * (Math.floor(Math.random() * (max - min) + min));
 }
-
-
-dibujaInicio(p1,level)
-cuerposAlAzar(level, p1)
-console.log(level.coordenadas)
-
 
 
 function presionoTecla(event) {
     
     if (p1.mov.contrMov) {
         clearInterval(p1.mov.contrMov)
-    } else {
-
     }
-    
     let lastMov = convertirKeyANumero(p1.mov.lastMov)
 
     if((lastMov % 2 == 0) && (event.key == "ArrowUp" || event.key == "ArrowDown")) {
@@ -99,12 +102,12 @@ function presionoTecla(event) {
             case "ArrowUp":
                 console.log('arriva')
                 p1.mov.lastMov = "ArrowUp";
-                p1.mov.contrMov = setInterval(moverA, 70, p1, "ArrowUp");
+                p1.mov.contrMov = setInterval(moverA, level.dificultad, p1, "ArrowUp");
                 break;
             case "ArrowDown":
                 console.log('abajo')
                 p1.mov.lastMov = "ArrowDown";
-                p1.mov.contrMov = setInterval(moverA, 70, p1, "ArrowDown");
+                p1.mov.contrMov = setInterval(moverA, level.dificultad, p1, "ArrowDown");
                 break;
         }  
 
@@ -113,16 +116,16 @@ function presionoTecla(event) {
             case "ArrowRight":
                 console.log('derecha')
                 p1.mov.lastMov = "ArrowRight";
-                p1.mov.contrMov = setInterval(moverA, 70, p1, "ArrowRight");
+                p1.mov.contrMov = setInterval(moverA, level.dificultad, p1, "ArrowRight");
                 break;
             case "ArrowLeft":
                 console.log('izquierda')
                 p1.mov.lastMov = "ArrowLeft";
-                p1.mov.contrMov = setInterval(moverA, 70, p1, "ArrowLeft");
+                p1.mov.contrMov = setInterval(moverA, level.dificultad, p1, "ArrowLeft");
                 break;
         }  
     } else {
-        p1.mov.contrMov = setInterval(moverA, 70, p1, p1.mov.lastMov);
+        p1.mov.contrMov = setInterval(moverA, level.dificultad, p1, p1.mov.lastMov);
         console.log('no te puedes mover por allí...')
     } 
 }
@@ -139,15 +142,6 @@ function convertirKeyANumero(key) {
             return 4;
     }
 }
-
-// function validarNumeroKey(numerokey) {
-
-// }
-
-
-
-
-
 
 function moverA(p1, direccion) {   
     
@@ -242,6 +236,8 @@ function pruebaDeColiciones(p1, level) {
     // debugger
     if ((level.coordenadas.xAzar == p1.cuerpos[0].xi) && (level.coordenadas.yAzar === p1.cuerpos[0].yi)) {
         level.level +=1;
+        level.dificultad -= 3
+        actualizarEstado(level)
         level.cuerpo = false
         p1.cuerpos.push(
             {
@@ -255,21 +251,86 @@ function pruebaDeColiciones(p1, level) {
    
 
     if(!p1.live) {
-        document.write('memoriiiii')
+        clearInterval(p1.mov.contrMov)
+        resetGame(p1, level)
+        document.removeEventListener('keyup', presionoTecla);  
+        muerto()
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-function numeroAzar(min,max) {
-    return 10 * (Math.floor(Math.random() * (max - min) + min));
+function actualizarEstado(level) {
+    levelContainer.innerHTML= level.level
     
 }
+
+function muerto() {
+        modalContainer.classList.add("open")
+        modalButton.addEventListener('click', dibujaInicio)
+
+}
+
+function resetGame(player, nivel) {
+    p1 = {
+        live: true,
+        mov: {
+            enmovimiento: false,
+            lastMov: "ArrowRight",
+            contrMov: undefined,
+            movimiento: 10,
+        },
+        tamaño: {
+            width: 10,
+            heigth: 10,
+        },
+        cuerpos: [
+            {
+                xi: 100,
+                yi: 50,
+            },
+            {
+                xi : (100) - ( 10 ),
+                yi: 50,
+            },
+            {
+                xi : (100) - ( 10 * 2 ),
+                yi: 50,
+            },
+            {
+                xi : (100) - ( 10 * 3 ),
+                yi: 50,
+            }
+            // {
+            //     xi : (100) - ( 10 * 4 ),
+            //     yi: 50,
+            // },
+            // {
+            //     xi : (100) - ( 10 * 5 ),
+            //     yi: 50,
+            // },
+            // {
+            //     xi : (100) - ( 10 * 6 ),
+            //     yi: 50,
+            // },
+            // {
+            //     xi : (100) - ( 10 * 7 ),
+            //     yi: 50,
+            // }
+        ]
+    };
+    level = {
+        coordenadas: {
+            xAzar: null,
+            yAzar: null
+        },
+        level: 1,
+        dificultad: 70,
+        // interval: undefined,
+        cuerpo: true
+    };
+    // player = newPlayer;
+    lienzo.clearRect(0, 0, canvas.width, canvas.height)
+}
+
+
+dibujaInicio(p1,level)
+

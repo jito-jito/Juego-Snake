@@ -4,14 +4,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
     <title>Snake</title>
 <script defer src="main.js"></script><link href="main.css" rel="stylesheet"></head>
 <body>
-    <img  alt="" class="img1">
-    <div>
-        <img  alt="" class="img2">
-        <canvas width="390" height="350" id="canvas"></canvas>
+    <!-- <img  alt="" class="img1"> -->
+    <div class="text-container">
+        <h1>Snake <br> Javascript</h1>
+        <p>Utiliza las flechas del teclado para mover a la serpiente <br><br>¡¡Mucho cuidado con tocar los bordes de tu zona de juego, o tu <br>propio cuerpo!!....</p>
     </div>
-
+    <div class="canvas-container">
+        <!-- <img  alt="" class="img2"> -->
+        <canvas width="390" height="350" id="canvas"></canvas>
+        <div class="level-container">
+            <h1>Nivel:</h1>
+            <p id="level">1</p>
+            
+        </div>
+    </div>
+    <div class="modalEndGame" id="modalContainer">
+        <div class="modalContainer" >
+            <h1>¡Ups!,, Perdiste</h1>
+            <p>Intentalo denuevo</p>
+            <button id="modalButton">Reintentar</button>
+        </div>
+    </div>
 </body>
 </html>
