@@ -14,7 +14,7 @@
     margin-left: 5vw;
 }
 
-.text-container h1 {
+.text-title {
     font-family: 'Do Hyeon', sans-serif;
     color: white;
     font-size: 50px;
@@ -122,4 +122,38 @@ canvas {
     border: none;
     font-size: 1em;
     letter-spacing: 1px;
+}
+
+.ranking-title {
+    font-family: 'Do Hyeon', sans-serif;
+    color: white;
+    font-size: 30px;
+    width: 70%;
+    text-align: center;
+}
+
+
+.ranking-table {
+    width: 70%;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 16px;
+    color: white;
+}
+
+.ranking-item--header > td {
+    border-bottom: 2px solid white;
+    text-align: center;
+}
+
+.ranking-item--header > td:first-child {
+    border-right: 2px solid white;
+}
+
+.ranking-item {
+    text-align: center;
+}
+
+.ranking-item > td:first-child {
+    border-right: 2px solid white;
+    
 }
