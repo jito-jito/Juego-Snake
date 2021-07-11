@@ -6,8 +6,6 @@ const bodyparser = require('body-parser');
 const cors = require('cors')
 
 // database
-
-
 const db = require('./src/backend/db');
 db();
 

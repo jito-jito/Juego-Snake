@@ -7,7 +7,7 @@ ranking.get('/', (req, res) => {
     getRanking()
         .then((data) => {
             res.json(data);
-            res.end()
+            res.end();
         })
         .catch((err) => {
             console.log('error en obtener ranking' + err)

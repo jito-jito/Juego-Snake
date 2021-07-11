@@ -1,4 +1,3 @@
-import { getRanking } from '../backend/components/ranking/store'
 import './assets/styles/styles.css'
 
 let canvas = document.getElementById('canvas')
