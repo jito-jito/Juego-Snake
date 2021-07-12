@@ -1,10 +1,10 @@
 const express = require('express');
 const ranking = express.Router();
 
-const { getRanking, postRank } = require('./store')
+const { getRank, saveRank } = require('./controller')
 
-ranking.get('/', (req, res) => {
-    getRanking()
+ranking.get('/', async (req, res) => {
+    getRank()
         .then((data) => {
             res.json(data);
             res.end();
@@ -16,8 +16,16 @@ ranking.get('/', (req, res) => {
 
 ranking.post('/', (req, res) => {
     let rank = req.body;
-    postRank(rank);
-    res.status(201).send();
+    saveRank(rank)
+        .then(() => {
+            console.log('Datos recibidos')
+            res.status(201).send();
+        })
+        .catch((err) => {
+            console.log('error en obtener ranking' + err)
+        })
+
+    
 })
 
 

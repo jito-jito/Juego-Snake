@@ -66,17 +66,13 @@ let level = {
     cuerpo: true
 }
 
-// console.log($ranking)
-// renderRanking()
-fetch('http://localhost:3000/game/ranking')
-    .then(response => response.json())
-    .then(data => renderRank(data));
-// function getRank() {
-// }
-
-// getRank()
-function renderRank(data) {
-    data.map((item) => {
+async function getRank() {
+    let rank;
+    await fetch('http://localhost:3000/game/ranking')
+        .then(response => response.json())
+        .then(data => rank = data)
+    
+    rank.map((item) => {
         $ranking.insertAdjacentHTML('beforeend', `
         <tr class="ranking-item">
             <td>${item.name}</td>
@@ -108,7 +104,7 @@ function sendRank(lastLevel) {
     })
 }
 
-
+getRank()
 
 
 function dibujaInicio () {   

@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
-const port = 3000;
 const router = require('./src/backend/network/routes');
 const bodyparser = require('body-parser');
 const cors = require('cors')
+const {config} = require('./config/index')
+
+const port = config.port
+
 
 // database
 const db = require('./src/backend/db');
